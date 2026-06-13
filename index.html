@@ -554,8 +554,12 @@
     if (e.key === 'Home') show(0);
     if (e.key === 'End') show(slides.length - 1);
   });
-  const fromHash = parseInt(location.hash.slice(1), 10);
-  show(isNaN(fromHash) ? 0 : fromHash - 1);
+  function syncFromHash() {
+    const fromHash = parseInt(location.hash.slice(1), 10);
+    show(isNaN(fromHash) ? 0 : fromHash - 1);
+  }
+  window.addEventListener('hashchange', syncFromHash);
+  syncFromHash();
 </script>
 </body>
 </html>
