@@ -1,21 +1,24 @@
 # Marlborough Christmas Village
 
-Working repository for the Marlborough Christmas Village — a pop-up, German-inspired
-holiday market in the village center of Marlborough, NH. Anticipated run: two weekends,
-Friday through Sunday. Modeled on the Amherst German Christmas Market (founded and
-chaired by Lindsay Buchanan).
+**Live deck (HTTPS):** https://jjn11111111.github.io/marlborough-christmas-village/
 
-This is a standalone planning project, not affiliated with any other repository or website.
+A pop-up, German-inspired holiday market in the village center of Marlborough, NH.
+Anticipated run: two weekends, Friday through Sunday. Modeled on the Amherst German
+Christmas Market (founded and chaired by Lindsay Buchanan).
 
-## The running deck
+This is a standalone planning project.
 
-Open [`index.html`](index.html) in any browser (double-click the file, no server needed).
+## View the deck
 
-- Navigate with arrow keys, spacebar, or the on-screen arrows.
-- Print to PDF from the browser to share a snapshot (all slides print automatically).
-- Each slide carries a status tag — **Proposed**, **In discussion**, or **Confirmed** —
-  so the deck can be updated as decisions land. Edit `index.html` directly and update
-  the date on the title slide.
+**Recommended:** Open the live version directly in any browser (no download needed):
+
+→ [https://jjn11111111.github.io/marlborough-christmas-village/](https://jjn11111111.github.io/marlborough-christmas-village/)
+
+- Arrow keys, spacebar, or on-screen buttons to navigate.
+- Print to PDF from the browser for offline snapshots.
+- Each slide shows a status tag (Proposed / In discussion / Confirmed) so the deck can evolve as decisions are made.
+
+For offline editing, open `index.html` from the repo (double-click works; no server required).
 
 ## Contents
 
@@ -26,7 +29,8 @@ Open [`index.html`](index.html) in any browser (double-click the file, no server
 | `source/christmas-village-google-earth.pdf` | Original Google Earth reference PDF |
 | `source/email-thread.md` | The JJ–Lindsay planning email thread, transcribed |
 
-## Note on confidentiality
+## Editing & updates
 
-The deck contains working pricing, revenue projections, and town-approval strategy.
-Keep this repository private.
+Edit `index.html` directly. After changes, commit and push — the live site at the URL above will update automatically via GitHub Pages.
+
+Update the date in the title slide footer when you make substantive revisions.
