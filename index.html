@@ -144,6 +144,38 @@
   .dark .bignum { color: var(--gold); }
   .bignum-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-top: 0.4rem; }
 
+  /* Hero title slide with full-bleed inspirational background image */
+  .slide.hero {
+    background: #0a0f0d;
+  }
+  .slide.hero .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+  .slide.hero .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+      rgba(10,15,13,0.38) 0%,
+      rgba(13,36,27,0.62) 38%,
+      rgba(13,36,27,0.82) 68%,
+      rgba(13,36,27,0.92) 100%);
+    z-index: 2;
+  }
+  .slide.hero .titlewrap {
+    position: relative;
+    z-index: 3;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+  }
+  .slide.hero .footer {
+    position: relative;
+    z-index: 3;
+  }
+
   @media print {
     body { background: none; }
     .slide { display: flex !important; page-break-after: always; width: 100%; height: 100vh; }
@@ -154,7 +186,9 @@
 <body>
 
 <!-- 1 · TITLE -->
-<section class="slide dark active">
+<section class="slide hero dark active">
+  <img src="assets/photos/inspiration-hero.png" class="hero-bg" alt="Iconic grand German Christmas market at night in a historic European square — massive illuminated Christmas tree, ornate buildings, bustling crowds, and a glowing bandstand. Overall aspirational inspiration for the scale, warmth, and magic of the Marlborough German Christmas Village.">
+  <div class="hero-overlay"></div>
   <div class="titlewrap">
     <div class="kicker">Municipal Activation Template — Running Deck</div>
     <h1>Marlborough German<br>Christmas Village</h1>
@@ -168,7 +202,7 @@
       <span style="font-size:0.85em; opacity:0.9;">Live: https://jjn11111111.github.io/marlborough-christmas-village/</span>
     </div>
   </div>
-  <div class="footer"><span>Marlborough German Christmas Village</span><span>Updated Jun 13, 2026</span></div>
+  <div class="footer"><span>Marlborough German Christmas Village</span><span>Inspiration</span></div>
 </section>
 
 <!-- 2 · VISION -->
