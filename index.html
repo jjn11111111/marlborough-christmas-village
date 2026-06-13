@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Marlborough Christmas Village — Running Deck</title>
+<style>
+  :root {
+    --pine: #16382b;
+    --pine-deep: #0d241b;
+    --cream: #f6f1e7;
+    --gold: #c9a14e;
+    --berry: #a33b35;
+    --ink: #1d2723;
+    --muted: #6b7a72;
+    --card: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: var(--pine-deep);
+    color: var(--ink);
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 4.5vh 6vw;
+    flex-direction: column;
+    background: var(--cream);
+    overflow: hidden;
+    position: relative;
+  }
+  .slide.active { display: flex; }
+  .slide.dark { background: linear-gradient(160deg, var(--pine-deep), var(--pine)); color: var(--cream); }
+
+  .kicker {
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--berry);
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+  .dark .kicker { color: var(--gold); }
+  h1 {
+    font-size: clamp(2.2rem, 5.4vw, 4.2rem);
+    line-height: 1.06;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+    line-height: 1.1;
+    margin-bottom: 2.2vh;
+    color: var(--pine);
+  }
+  .dark h2 { color: var(--cream); }
+  .slide-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  p.lede { font-size: clamp(1rem, 1.7vw, 1.3rem); line-height: 1.5; max-width: 62ch; color: var(--ink); }
+  .dark p.lede { color: var(--cream); }
+
+  .status {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.28em 0.8em;
+    border-radius: 99px;
+    margin-left: 0.8em;
+    vertical-align: middle;
+  }
+  .status.proposed   { background: #efe3c8; color: #7a5c17; }
+  .status.discussion { background: #dce8f3; color: #2c5276; }
+  .status.confirmed  { background: #d9ead9; color: #2c5e34; }
+
+  .cols { display: flex; gap: 2.5vw; flex: 1; min-height: 0; }
+  .col { flex: 1; min-width: 0; }
+
+  .cardgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4vh 1.2vw;
+    align-content: start;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(13, 36, 27, 0.10);
+    border-top: 3px solid var(--gold);
+  }
+  .card h3 { font-size: 1.02rem; color: var(--pine); margin-bottom: 0.45rem; }
+  .card p, .card li { font-size: 0.92rem; line-height: 1.45; color: var(--ink); }
+  .card ul { padding-left: 1.1em; }
+
+  ul.list { padding-left: 1.2em; }
+  ul.list li { font-size: clamp(0.95rem, 1.45vw, 1.15rem); line-height: 1.5; margin-bottom: 0.85vh; }
+  ul.list li strong { color: var(--pine); }
+  .dark ul.list li strong { color: var(--gold); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(13,36,27,0.10); }
+  th { background: var(--pine); color: var(--cream); text-align: left; font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.7rem 1rem; }
+  td { padding: 0.62rem 1rem; font-size: 0.95rem; border-bottom: 1px solid #ece5d6; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--pine); white-space: nowrap; }
+
+  .figure { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .figure img {
+    flex: 1; min-height: 0; width: 100%;
+    object-fit: contain; border-radius: 10px;
+    background: #fff; box-shadow: 0 2px 10px rgba(13,36,27,0.18);
+  }
+  .figure figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.7vh; text-align: center; }
+  .dark .figure figcaption { color: #b9c7c0; }
+
+  .footer {
+    position: absolute; bottom: 2.2vh; left: 6vw; right: 6vw;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .dark .footer { color: #92a59b; }
+
+  .nav {
+    position: fixed; bottom: 2vh; right: 2vw; z-index: 50;
+    display: flex; gap: 0.4rem; align-items: center;
+  }
+  .nav button {
+    background: rgba(22, 56, 43, 0.85); color: var(--cream);
+    border: none; border-radius: 8px; font-size: 1.05rem;
+    width: 2.4rem; height: 2.4rem; cursor: pointer;
+  }
+  .nav button:hover { background: var(--berry); }
+  .nav .count { color: var(--cream); font-size: 0.8rem; background: rgba(22,56,43,0.85); padding: 0.55rem 0.8rem; border-radius: 8px; }
+
+  .titlewrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .title-rule { width: 84px; height: 4px; background: var(--gold); margin: 3vh 0; border-radius: 2px; }
+  .subtitle { font-size: clamp(1.05rem, 2vw, 1.5rem); color: var(--gold); font-weight: 600; letter-spacing: 0.04em; }
+  .meta { margin-top: 4vh; font-size: 0.95rem; line-height: 1.7; color: #c5d2ca; }
+
+  .bignum { font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 700; color: var(--pine); line-height: 1; }
+  .dark .bignum { color: var(--gold); }
+  .bignum-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-top: 0.4rem; }
+
+  @media print {
+    body { background: none; }
+    .slide { display: flex !important; page-break-after: always; width: 100%; height: 100vh; }
+    .nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide dark active">
+  <div class="titlewrap">
+    <div class="kicker">Running Deck · Working Document</div>
+    <h1>Marlborough<br>Christmas Village</h1>
+    <div class="title-rule"></div>
+    <div class="subtitle">A Christmas Village Inside a Village &mdash; Marlborough, New Hampshire</div>
+    <div class="meta">
+      A pop-up, German-inspired holiday market across the village center.<br>
+      Anticipated run: two weekends, Friday through Sunday.<br>
+      John Jeremy Norman &middot; Lindsay Buchanan &middot; Working draft, June 2026
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Updated Jun 12, 2026</span></div>
+</section>
+
+<!-- 2 · VISION -->
+<section class="slide">
+  <div class="kicker">01 · Vision</div>
+  <h2>A German Christmas Village inside the village <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <p class="lede">A holiday-themed pop-up village built around our existing buildings in the center of Marlborough, NH &mdash; tents, lights, music, food, and craft vendors transforming the town core into a walkable Weihnachtsmarkt experience for the Monadnock Region.</p>
+    <div class="cardgrid" style="margin-top: 2.5vh;">
+      <div class="card"><h3>Village within a village</h3><p>The municipal lot, the Church, the Main House, and Stark Level Solutions form a connected festival campus inside the real town &mdash; not a fairground bolted onto it.</p></div>
+      <div class="card"><h3>Pop-up format</h3><p>Two weekends, Friday&ndash;Sunday. Build, run, strike. Start-small option on the table per Lindsay: prove the details, then expand.</p></div>
+      <div class="card"><h3>Plug-and-play framework</h3><p>The site plan, staffing model, and perimeter design are reusable: summer music festival, theatrical events, fall Halloween fling, community events.</p></div>
+      <div class="card"><h3>Regional draw</h3><p>An attention-catching anchor event for Marlborough, Keene, and the wider Monadnock Region, capable of accommodating thousands of visitors.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Vision</span></div>
+</section>
+
+<!-- 3 · PRECEDENT -->
+<section class="slide">
+  <div class="kicker">02 · Precedent</div>
+  <h2>Proven model: Amherst German Christmas Market <span class="status confirmed">Reference</span></h2>
+  <div class="slide-body">
+    <p class="lede">Lindsay Buchanan founded and chairs the Amherst German Christmas Market (Amherst, NH) &mdash; the direct template for this event and the documented track record behind our town-approval case.</p>
+    <div class="cols" style="margin-top: 2.5vh;">
+      <div class="col">
+        <table>
+          <tr><th>Amherst GCM</th><th>What it proves</th></tr>
+          <tr><td>Inaugural 2022 drew ~4,500 visitors; grew to ~20,000</td><td>Demand for this format in southern NH is real and large</td></tr>
+          <tr><td>501(c)(3) nonprofit, volunteer-run, on the Village Green</td><td>Community-anchored model that towns approve</td></tr>
+          <tr><td>55+ hand-picked craft vendors, German imports, local farms</td><td>Vendor pipeline and curation experience</td></tr>
+          <tr><td>Biergarten with gl&uuml;hwein and German beer; Santa &amp; Krampus; live music</td><td>Programming blueprint for our Church beer hall</td></tr>
+          <tr><td>Ticketed entry ($10/adult, kids 13&amp;under free), capped at 1,000/hour</td><td>Crowd-management precedent towns respect</td></tr>
+          <tr><td>Off-site parking (Walmart lot) with shuttle service</td><td>Validates our satellite-lot + Caboose plan</td></tr>
+        </table>
+      </div>
+    </div>
+    <p style="margin-top: 1.8vh; font-size: 0.9rem; color: var(--muted);">Sources: amherstchristmasmarket.org &middot; Nashua Telegraph (Dec 2022) &middot; Amherst BOS minutes (2025)</p>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Precedent</span></div>
+</section>
+
+<!-- 4 · SITE OVERVIEW -->
+<section class="slide">
+  <div class="kicker">03 · Site</div>
+  <h2>Site overview &mdash; the village campus <span class="status discussion">In discussion</span></h2>
+  <div class="slide-body">
+    <div class="cols">
+      <div class="col" style="flex: 1.2;">
+        <figure class="figure">
+          <img src="assets/earth/earth-04.png" alt="Aerial view of Marlborough village center with event areas highlighted in yellow">
+          <figcaption>Event campus (yellow): Marlborough House, Stark Level, lane connector, and Municipal Lot. Getty and Fire Dept adjoin.</figcaption>
+        </figure>
+      </div>
+      <div class="col">
+        <ul class="list">
+          <li><strong>Municipal Lot</strong> &mdash; main vendor village, tents and lights</li>
+          <li><strong>Main Hall / Church</strong> &mdash; Hofbr&auml;u-style winter beer garden</li>
+          <li><strong>Main House (Marlborough House)</strong> &mdash; Christmas fantasy rooms, arts &amp; crafts</li>
+          <li><strong>Stark Level Solutions</strong> &mdash; HQ, vendor check-in, green room, production</li>
+          <li><strong>Community House &amp; back lane</strong> &mdash; overflow vendor / activity areas connecting the lot to Marlborough House</li>
+          <li><strong>Route 101</strong> &mdash; bisects the site; managed crossings required</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Site Overview</span></div>
+</section>
+
+<!-- 5 · VENUE PROGRAMMING -->
+<section class="slide">
+  <div class="kicker">04 · Venues</div>
+  <h2>Venue programming <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <div class="cardgrid">
+      <div class="card"><h3>Main Hall / Church &mdash; &ldquo;Hofbr&auml;u House&rdquo;</h3><p>Winter beer garden with a holiday selection of beverages (gl&uuml;hwein, German beer) and themed food offerings. Indoor vendor spaces possible at ~10'&times;10' equivalents in the chapel.</p></div>
+      <div class="card"><h3>Main House &mdash; Christmas Fantasy</h3><p>Christmas through and through, room by room: arts &amp; crafts, ornament makers, themed installations per room as discussed.</p></div>
+      <div class="card"><h3>Stark Level Solutions &mdash; HQ</h3><p>Vendor check-in and pre-set-up, green room for performers and workers, production base, and restrooms.</p></div>
+      <div class="card"><h3>Community House &amp; back lane</h3><p>Candidate areas for additional vendors and activities along the lane joining the municipal lot and Marlborough House.</p></div>
+      <div class="card"><h3>Restrooms</h3><p>Bathrooms exist at all our locations, but at this event scale a set of restroom trailers is likely necessary. Goal: avoid port-a-potties. <span class="status discussion">In discussion</span></p></div>
+      <div class="card"><h3>Entertainment</h3><p>Per the Amherst blueprint: German and Christmas music, Santa (and Krampus) photo ops, festive light displays. Programming TBD.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Venue Programming</span></div>
+</section>
+
+<!-- 6 · VENDOR VILLAGE -->
+<section class="slide">
+  <div class="kicker">05 · Vendors</div>
+  <h2>Vendor village &mdash; Municipal Lot <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <div class="cols">
+      <div class="col" style="flex: 1.2;">
+        <figure class="figure">
+          <img src="assets/earth/earth-03.png" alt="Zoomed aerial of the municipal lot highlighted in yellow">
+          <figcaption>The municipal lot (yellow) &mdash; main vendor setup area.</figcaption>
+        </figure>
+      </div>
+      <div class="col">
+        <ul class="list">
+          <li><strong>Capacity:</strong> at least <strong>75 vendors</strong> in the standard tent format; ~100 with surrounding areas</li>
+          <li><strong>Outdoor footprint:</strong> ~13'&times;13' per vendor (10'&times;10' tents plus buffer)</li>
+          <li><strong>Indoor:</strong> chapel spaces at roughly 10'&times;10' equivalents</li>
+          <li><strong>Atmosphere:</strong> themed lighting throughout, holiday signage and wayfinding pointing in all directions</li>
+          <li><strong>Overflow:</strong> Community House grounds, back lane, and the serpentine driveway behind the house</li>
+          <li><strong>To do:</strong> measure the lot and produce a ground plan with appropriate spacing <span class="status discussion">In discussion</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Vendor Village</span></div>
+</section>
+
+<!-- 7 · PARKING & SHUTTLES -->
+<section class="slide">
+  <div class="kicker">06 · Parking</div>
+  <h2>Satellite parking &amp; Christmas Cabooses <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <div class="cols">
+      <div class="col" style="flex: 1.2;">
+        <figure class="figure">
+          <img src="assets/earth/earth-02.png" alt="Aerial map with parking areas circled in red and municipal lot in yellow">
+          <figcaption>Parking circled in red; yellow is the municipal lot / vendor village.</figcaption>
+        </figure>
+      </div>
+      <div class="col">
+        <ul class="list">
+          <li><strong>Marlborough Elementary School</strong> &mdash; enormous lot, ~0.5 mile from town center</li>
+          <li><strong>McNabb Slabs end</strong> &mdash; large parking area</li>
+          <li><strong>Behind former Mother's</strong> (current studio location) &mdash; large area directly behind</li>
+          <li><strong>General store lot</strong> &mdash; across from Town Hall and police HQ, walking distance</li>
+          <li><strong>&ldquo;Christmas Cabooses&rdquo;</strong> &mdash; stretch golf carts or other thematically decorated conveyances shuttling visitors to and from the central event</li>
+          <li>Off-site parking + shuttles mirrors the proven Amherst operating model</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Parking &amp; Shuttles</span></div>
+</section>
+
+<!-- 8 · TRAFFIC, SAFETY, PERIMETER -->
+<section class="slide">
+  <div class="kicker">07 · Safety</div>
+  <h2>Traffic, safety &amp; perimeter <span class="status discussion">In discussion</span></h2>
+  <div class="slide-body">
+    <div class="cols">
+      <div class="col">
+        <div class="cardgrid" style="grid-template-columns: 1fr;">
+          <div class="card"><h3>Route 101 management &mdash; the biggest issue</h3><p>Designated crossing points staffed by traffic guards, plus appointees managing pedestrian flow. Full discussion required with the town and local police.</p></div>
+          <div class="card"><h3>Themed perimeter &ldquo;prop fence&rdquo;</h3><p>Perimeter barrier in keeping with the Christmas theme, with entrances aligned to existing driveways. Ties in with neighbors: the Getty, the Fire Department, and the assisted living homes forming one side of the village.</p></div>
+          <div class="card"><h3>Neighbor partnership</h3><p>Assisted living residents offered free VIP passes for all festivities &mdash; an easy sell that supports the security perimeter. Our properties plus Main Crust form the other perimeter; relationships there are strong.</p></div>
+        </div>
+      </div>
+      <div class="col" style="flex: 0.9;">
+        <figure class="figure">
+          <img src="assets/earth/earth-09.png" alt="Aerial of Route 101, Getty and Fire Dept with municipal lot behind">
+          <figcaption>Route 101 frontage &mdash; Getty and Fire Dept, municipal lot behind.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Traffic &amp; Safety</span></div>
+</section>
+
+<!-- 9 · STAFFING -->
+<section class="slide">
+  <div class="kicker">08 · Staffing</div>
+  <h2>Staffing model <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <table>
+      <tr><th>Role</th><th>Headcount</th><th>Notes</th></tr>
+      <tr><td>Security staff</td><td class="num">5</td><td>Hired</td></tr>
+      <tr><td>Runners / junior producers</td><td class="num">5&ndash;6</td><td>Volunteers or low-paid staff</td></tr>
+      <tr><td>Ticket booth staff</td><td class="num">2 per entrance</td><td>Equipped with iPads + Square to ring people in and check tickets</td></tr>
+      <tr><td>Caboose operators</td><td class="num">~4</td><td>Depends on final setup and anticipated guest count</td></tr>
+      <tr><td>Traffic guards / crossing staff</td><td class="num">TBD</td><td>Stationed at designated Route 101 crossing points; coordinate with police</td></tr>
+    </table>
+    <div style="display: flex; gap: 4vw; margin-top: 3.5vh;">
+      <div><div class="bignum">16+</div><div class="bignum-label">Core event staff</div></div>
+      <div><div class="bignum">2</div><div class="bignum-label">Weekends, Fri&ndash;Sun</div></div>
+      <div><div class="bignum">1000s</div><div class="bignum-label">Visitors accommodated</div></div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Staffing</span></div>
+</section>
+
+<!-- 10 · REVENUE -->
+<section class="slide">
+  <div class="kicker">09 · Revenue</div>
+  <h2>Revenue model &mdash; first pass <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <div class="cols">
+      <div class="col">
+        <table>
+          <tr><th>Stream</th><th>Assumption</th><th>Estimate</th></tr>
+          <tr><td>Vendor booths</td><td>$250/booth &times; ~90&ndash;100 vendors</td><td class="num">$22,500+</td></tr>
+          <tr><td>Gate admission</td><td>$5/family ticket &times; 5,000 per weekend</td><td class="num">$25,000 / weekend</td></tr>
+          <tr><td>Premium booths</td><td>Larger or in-house placements at higher rates</td><td class="num">Upside, TBD</td></tr>
+          <tr><td>Beer garden &amp; concessions</td><td>Hofbr&auml;u House beverages and themed food</td><td class="num">TBD</td></tr>
+        </table>
+        <p style="margin-top: 2vh; font-size: 0.95rem; color: var(--muted); max-width: 60ch;">Back-of-envelope figures from the working thread; a two-weekend run at these assumptions suggests roughly $70k+ gross before premium booths and concessions. Pricing reference: Amherst charges $10/adult with kids 13 and under free.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Revenue Model</span></div>
+</section>
+
+<!-- 11 · APPROVALS -->
+<section class="slide">
+  <div class="kicker">10 · Approvals</div>
+  <h2>Approvals &amp; stakeholders <span class="status discussion">In discussion</span></h2>
+  <div class="slide-body">
+    <div class="cardgrid">
+      <div class="card"><h3>Town of Marlborough</h3><p>Full discussion required on setup, logistics, parking, and overall event format. Lindsay's documented success in Amherst (incl. Board of Selectmen approvals) is the proof case.</p></div>
+      <div class="card"><h3>Local police</h3><p>Route 101 traffic management, crossing points, and crowd flow must be designed jointly with police. Amherst precedent: department heads engaged early, safety as top priority.</p></div>
+      <div class="card"><h3>Key local supporters</h3><p>Strategy: secure the support of key individuals first, then bring the package to the town. Town businesses already approached &mdash; all in favor.</p></div>
+      <div class="card"><h3>Neighbors</h3><p>The Getty, Fire Department, assisted living homes (VIP passes), and Main Crust. Relationships are friendly; formal buy-in to be confirmed.</p></div>
+      <div class="card"><h3>Community House</h3><p>Expected to get on board with using the spaces around the municipal lot. To be confirmed.</p></div>
+      <div class="card"><h3>School / lot owners</h3><p>Permissions for satellite parking at the elementary school, McNabb Slabs area, the studio lot, and the general store lot.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Approvals &amp; Stakeholders</span></div>
+</section>
+
+<!-- 12 · OPEN QUESTIONS -->
+<section class="slide">
+  <div class="kicker">11 · Open Questions</div>
+  <h2>Open questions <span class="status discussion">In discussion</span></h2>
+  <div class="slide-body">
+    <ul class="list">
+      <li><strong>Dates</strong> &mdash; which two weekends? (Lindsay's direct ask; Friday&ndash;Sunday format anticipated)</li>
+      <li><strong>Vendor count</strong> &mdash; confirm capacity via measured ground plan of the municipal lot, driveway, and chapel</li>
+      <li><strong>Restrooms</strong> &mdash; restroom trailers: how many, where staged, cost; avoid port-a-potties if possible</li>
+      <li><strong>Ticketing</strong> &mdash; $5/family vs. per-person pricing; hourly caps like Amherst's 1,000/hour model; timed entry</li>
+      <li><strong>Scale of year one</strong> &mdash; Lindsay favors starting small and expanding; JJ's full campus vision is the target state. Phasing to agree</li>
+      <li><strong>Caboose logistics</strong> &mdash; vehicle type, route, frequency, ADA accessibility</li>
+      <li><strong>Entity & insurance</strong> &mdash; who is the operating entity; nonprofit vs. commercial structure; event insurance and liquor licensing for the beer garden</li>
+    </ul>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Open Questions</span></div>
+</section>
+
+<!-- 13 · NEXT STEPS -->
+<section class="slide">
+  <div class="kicker">12 · Next Steps</div>
+  <h2>Next steps <span class="status proposed">Proposed</span></h2>
+  <div class="slide-body">
+    <table>
+      <tr><th>#</th><th>Action</th><th>Owner</th></tr>
+      <tr><td class="num">1</td><td>Answer Lindsay: vendor capacity estimate and candidate dates</td><td>JJ</td></tr>
+      <tr><td class="num">2</td><td>Measure the municipal lot and draft the vendor ground plan (13'&times;13' grid)</td><td>JJ / Lindsay</td></tr>
+      <tr><td class="num">3</td><td>Complete remaining site visits (interior spaces, satellite lots)</td><td>Lindsay</td></tr>
+      <tr><td class="num">4</td><td>Line up key local supporters ahead of the formal town conversation</td><td>JJ</td></tr>
+      <tr><td class="num">5</td><td>Schedule discussion with the town and police: traffic, crossings, permits</td><td>JJ / Lindsay</td></tr>
+      <tr><td class="num">6</td><td>Quote restroom trailers and Caboose vehicles</td><td>TBD</td></tr>
+      <tr><td class="num">7</td><td>Agree year-one scale and phasing; lock dates</td><td>JJ / Lindsay</td></tr>
+    </table>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Next Steps</span></div>
+</section>
+
+<!-- 14 · APPENDIX TITLE -->
+<section class="slide dark">
+  <div class="titlewrap">
+    <div class="kicker">Appendix</div>
+    <h1>Google Earth<br>Reference</h1>
+    <div class="title-rule"></div>
+    <div class="subtitle">Site imagery &mdash; parking, municipal lot, perimeter, and sight lines</div>
+  </div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<!-- APPENDIX SLIDES -->
+<section class="slide">
+  <div class="kicker">Appendix · A1</div>
+  <h2>Parking overview</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-02.png" alt="Aerial overview with parking circled in red and municipal lot in yellow">
+    <figcaption>Parking circled in red. Yellow smudge is the municipal lot and suggested vendor setup village.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A2</div>
+  <h2>Municipal lot &mdash; zoom</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-03.png" alt="Zoomed aerial of the municipal lot">
+    <figcaption>Zooming in on the municipal lot (yellow).</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A3</div>
+  <h2>Event campus</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-04.png" alt="Aerial with Marlborough House, Stark Level, Getty and Fire Dept, and municipal lot labeled">
+    <figcaption>Municipal Lot, Marlborough House, Stark Level, Getty and Fire Dept.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A4</div>
+  <h2>Ling St. and Route 101</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-05.png" alt="Aerial of Ling St and Route 101 across to Stark Level Solutions">
+    <figcaption>Ling St. and 101, across to Stark Level Solutions.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A5</div>
+  <h2>Dave's junkyard</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-06.png" alt="Aerial with Dave's junkyard circled in red">
+    <figcaption>Circled in red: Dave's junkyard (3,556 ft reference).</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A6</div>
+  <h2>General store &amp; Dave's junkyard</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-07.png" alt="Aerial of the general store and Dave's junkyard">
+    <figcaption>General store and Dave's junkyard &mdash; candidate satellite parking.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A7</div>
+  <h2>Across 101, looking up Ling</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-08.png" alt="Street-level view across Route 101 looking up Ling St">
+    <figcaption>Across 101, looking up Ling.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A8</div>
+  <h2>101 frontage &mdash; Getty &amp; Fire Dept</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-09.png" alt="Route 101 with Getty and Fire Dept, municipal lot behind">
+    <figcaption>101, Getty and Fire Dept &mdash; municipal lot behind.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Appendix · A9</div>
+  <h2>View between Getty and the consignment house</h2>
+  <div class="slide-body"><figure class="figure">
+    <img src="assets/earth/earth-10.png" alt="Street views between the Getty and the neighboring house">
+    <figcaption>View between Getty and this house &mdash; now a consignment / this-and-that store.</figcaption>
+  </figure></div>
+  <div class="footer"><span>Marlborough Christmas Village</span><span>Appendix</span></div>
+</section>
+
+<div class="nav">
+  <button id="prev" aria-label="Previous slide">&#8592;</button>
+  <span class="count" id="count">1 / 1</span>
+  <button id="next" aria-label="Next slide">&#8594;</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let idx = 0;
+  function show(i) {
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, j) => s.classList.toggle('active', j === idx));
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    location.hash = idx + 1;
+  }
+  document.getElementById('prev').addEventListener('click', () => show(idx - 1));
+  document.getElementById('next').addEventListener('click', () => show(idx + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') show(idx + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(idx - 1);
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+  const fromHash = parseInt(location.hash.slice(1), 10);
+  show(isNaN(fromHash) ? 0 : fromHash - 1);
+</script>
+</body>
+</html>
