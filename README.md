@@ -1,10 +1,12 @@
-# Marlborough Christmas Village
+# Marlborough German Christmas Village / Municipal Activation Template
 
 **Live deck (HTTPS):** https://jjn11111111.github.io/marlborough-christmas-village/
 
-A pop-up, German-inspired holiday market in the village center of Marlborough, NH.
-Anticipated run: two weekends, Friday through Sunday. Modeled on the Amherst German
-Christmas Market (founded and chaired by Lindsay Buchanan).
+A pop-up, German-inspired holiday market in the village center of Marlborough, NH — designed as a reusable **Municipal Activation Template**.
+
+This framework can be adapted for summer music festivals, theatrical events, fall Halloween flings, Easter celebrations, community action events, and more.
+
+Anticipated run for the Christmas Village: two weekends, Friday through Sunday. Modeled on the Amherst German Christmas Market (founded and chaired by Lindsay Buchanan).
 
 This is a standalone planning project.
 
